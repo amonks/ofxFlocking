@@ -1,9 +1,12 @@
 /*
- *  Flock.h
+ *  Boid.h
+ *  boid
  *
- *  Created by Jeffrey Crouse on 3/30/10.
+ *  Created by Jeffrey Crouse on 3/29/10.
  *  Copyright 2010 Eyebeam. All rights reserved.
- *  Modified by Takara Hokao
+ *  Updated by Takara Hokao
+ *	Updated by Andrew Monks
+ *
  */
 
 #pragma once

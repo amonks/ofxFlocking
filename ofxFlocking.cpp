@@ -1,34 +1,36 @@
 /*
- *  ofxFlocking.cpp
- *  flock
+ *  Boid.h
+ *  boid
  *
- *  Created by Jeffrey Crouse on 3/30/10.
+ *  Created by Jeffrey Crouse on 3/29/10.
  *  Copyright 2010 Eyebeam. All rights reserved.
- *  Modified by Takara Hokao
+ *  Updated by Takara Hokao
+ *  Updated by Andrew Monks
+ *
  */
 
 #include "ofxFlocking.h"
 
 void ofxFlocking::update() {
     int i;
-	for(i = 0; i < boids.size(); i++) {
-		boids[i].update(boids);
-	}
+    for(i = 0; i < boids.size(); i++) {
+        boids[i].update(boids);
+    }
 }
 
 void ofxFlocking::draw() {
     int i;
-	for(i = 0; i < boids.size(); i++) {
-		boids[i].draw();
-	}
+    for(i = 0; i < boids.size(); i++) {
+        boids[i].draw();
+    }
 }
 
 void ofxFlocking::addBoid() {
-	boids.push_back(Boid());
+    boids.push_back(Boid());
 }
 
 void ofxFlocking::addBoid(int x, int y) {
-	boids.push_back(Boid(x, y));
+    boids.push_back(Boid(x, y));
 }
 
 void ofxFlocking::removeBoid(int x, int y, int radius) {

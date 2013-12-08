@@ -5,6 +5,7 @@
  *  Created by Jeffrey Crouse on 3/29/10.
  *  Copyright 2010 Eyebeam. All rights reserved.
  *  Updated by Takara Hokao
+ *	Updated by Andrew Monks
  *
  */
 
@@ -37,7 +38,7 @@ void Boid::update(vector<Boid> &boids) {
     vel.x = ofClamp(vel.x, -maxspeed, maxspeed);  // Limit speed
 	vel.y = ofClamp(vel.y, -maxspeed, maxspeed);  // Limit speed
     loc += vel;
-    acc = 0;  // Reset accelertion to 0 each cycle
+    acc.set(0,0);  // Reset accelertion to 0 each cycle
 	
 	if (loc.x < -r) loc.x = ofGetWidth()+r;
     if (loc.y < -r) loc.y = ofGetHeight()+r;
@@ -46,23 +47,23 @@ void Boid::update(vector<Boid> &boids) {
     if (loc.y > ofGetHeight()+r) loc.y = -r;
 }
 
-void Boid::seek(ofxVec2f target) {
+void Boid::seek(ofVec2f target) {
     acc += steer(target, false);
 }
 
-void Boid::avoid(ofxVec2f target) {
+void Boid::avoid(ofVec2f target) {
     acc -= steer(target, false);
 }
 
-void Boid::arrive(ofxVec2f target) {
+void Boid::arrive(ofVec2f target) {
     acc += steer(target, true);
 }
 
 // A method that calculates a steering vector towards a target
 // Takes a second argument, if true, it slows down as it approaches the target
-ofxVec2f Boid::steer(ofxVec2f target, bool slowdown) {
-    ofxVec2f steer;  // The steering vector
-    ofxVec2f desired = target - loc;  // A vector pointing from the location to the target
+ofVec2f Boid::steer(ofVec2f target, bool slowdown) {
+    ofVec2f steer;  // The steering vector
+    ofVec2f desired = target - loc;  // A vector pointing from the location to the target
     
 	float d = ofDist(target.x, target.y, loc.x, loc.y); // Distance from the target is the magnitude of the vector
 	
@@ -107,9 +108,9 @@ void Boid::draw() {
 }
 
 void Boid::flock(vector<Boid> &boids) {
-	ofxVec2f sep = separate(boids);
-	ofxVec2f ali = align(boids);
-	ofxVec2f coh = cohesion(boids);
+	ofVec2f sep = separate(boids);
+	ofVec2f ali = align(boids);
+	ofVec2f coh = cohesion(boids);
 	
 	// Arbitrarily weight these forces
 	sep *= 1.5;
@@ -134,9 +135,9 @@ bool Boid::isHit(int x, int y, int radius) {
 
 // Separation
 // Method checks for nearby boids and steers away
-ofxVec2f Boid::separate(vector<Boid> &boids) {
+ofVec2f Boid::separate(vector<Boid> &boids) {
     float desiredseparation = 25.0f;
-    ofxVec2f steer;
+    ofVec2f steer;
     int count = 0;
 	
     // For every boid in the system, check if it's too close
@@ -148,7 +149,7 @@ ofxVec2f Boid::separate(vector<Boid> &boids) {
 		// If the distance is greater than 0 and less than an arbitrary amount (0 when you are yourself)
 		if ((d > 0) && (d < desiredseparation)) {
 			// Calculate vector pointing away from neighbor
-			ofxVec2f diff = loc - other.loc;
+			ofVec2f diff = loc - other.loc;
 			diff /= d;			// normalize
 			diff /= d;        // Weight by distance
 			steer += diff;
@@ -178,9 +179,9 @@ ofxVec2f Boid::separate(vector<Boid> &boids) {
 
 // Alignment
 // For every nearby boid in the system, calculate the average velocity
-ofxVec2f Boid::align(vector<Boid> &boids) {
+ofVec2f Boid::align(vector<Boid> &boids) {
     float neighbordist = 50.0;
-    ofxVec2f steer;
+    ofVec2f steer;
     int count = 0;
     for (int i = 0 ; i < boids.size(); i++) {
 		Boid &other = boids[i];
@@ -210,9 +211,9 @@ ofxVec2f Boid::align(vector<Boid> &boids) {
 
 // Cohesion
 // For the average location (i.e. center) of all nearby boids, calculate steering vector towards that location
-ofxVec2f Boid::cohesion(vector<Boid> &boids) {
+ofVec2f Boid::cohesion(vector<Boid> &boids) {
     float neighbordist = 50.0;
-    ofxVec2f sum;   // Start with empty vector to accumulate all locations
+    ofVec2f sum;   // Start with empty vector to accumulate all locations
     int count = 0;
     for (int i = 0 ; i < boids.size(); i++) {
 		Boid &other = boids[i];
